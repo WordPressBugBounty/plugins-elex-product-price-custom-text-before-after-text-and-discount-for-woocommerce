@@ -2,8 +2,8 @@
 Contributors: elextensions
 Tags: before & after text, woocommerce discounts, woocommerce dynamic pricing
 Requires at least: 3.0.1
-Tested up to: 6.6
-Stable tag: 4.1.3
+Tested up to: 6.7
+Stable tag: 4.1.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -57,6 +57,10 @@ We, Team <a rel="nofollow" href="https://elextensions.com/https://elextensions.c
 If you are facing any issues, please create a topic at the plugin support section on wordpress org. Our team will respond back soon.
 
 == Changelog ==
+= 4.1.4 =
+* Made compatible with WordPress 6.7
+* Made compatible with WooCommerce 9.4
+
 = 4.1.3 =
 * Made compatible with WordPress 6.6
 * Made compatible with WooCommerce 9.2
@@ -205,6 +209,10 @@ If you are facing any issues, please create a topic at the plugin support sectio
 * Initial Push
 
 == Upgrade Notice ==
+= 4.1.4 =
+* Made compatible with WordPress 6.7
+* Made compatible with WooCommerce 9.4
+
 = 4.1.3 =
 * Made compatible with WordPress 6.6
 * Made compatible with WooCommerce 9.2
