@@ -3,9 +3,9 @@
 Plugin name: ELEX WooCommerce Product Price Custom Text (Before & After Text) and Discount
 Plugin URI: https://elextensions.com/plugin
 Description: The plugin simplifies the task to add a text before and after the product price both globally and individually.It also allows you to apply a quick discount for your products.
-Version: 4.1.4
+Version: 4.1.5
 WC requires at least: 2.6.0
-WC tested up to: 9.4
+WC tested up to: 9.6
 Author: ELEXtensions
 Author URI: https://elextensions.com/
 Text Domain: elex-product-price-custom-text-and-discount
@@ -82,7 +82,7 @@ if ( ! function_exists( 'get_plugin_data' ) ) {
 	require_once  ABSPATH . 'wp-admin/includes/plugin.php';
 }
 include_once __DIR__ . '/review_and_troubleshoot_notify/review-and-troubleshoot-notify-class.php';
-$data                      = get_plugin_data( __FILE__ );
+$data                      = get_plugin_data( __FILE__, false, false );
 $data['name']              = $data['Name'];
 $data['basename']          = plugin_basename( __FILE__ );
 $data['rating_url']        = 'https://elextensions.com/plugin/elex-woocommerce-product-price-custom-text-before-after-text-and-discount-plugin-free/#reviews';
