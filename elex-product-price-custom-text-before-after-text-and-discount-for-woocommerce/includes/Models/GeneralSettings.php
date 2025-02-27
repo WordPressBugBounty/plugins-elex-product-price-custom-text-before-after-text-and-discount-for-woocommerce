@@ -86,8 +86,8 @@ class GeneralSettings {
 		update_option( 'elex_ppct_check_field', $this->form_data['elex_ppct_check_field'] );
 		update_option( 'elex_ppct_select_all_pages_value', $this->form_data['elex_ppct_select_all_pages'] );
 		update_option( 'elex_ppct_pages', $this->form_data['elex_custom_text_selected_pages'] );
-		update_option( 'elex_ppct_prefix_field', $this->form_data['elex_ppct_prefix_field'] );
-		update_option( 'elex_ppct_suffix_field', $this->form_data['elex_ppct_suffix_field'] );
+		update_option( 'elex_ppct_prefix_field', htmlspecialchars( stripslashes_deep( $this->form_data['elex_ppct_prefix_field'] ) ) );
+		update_option( 'elex_ppct_suffix_field', htmlspecialchars( stripslashes_deep( $this->form_data['elex_ppct_suffix_field'] ) ) );
 		update_option( 'elex_ppct_discount_type', $this->form_data['elex_ppct_discount_type'] );
 		update_option( 'elex_ppct_discount_amount', $this->form_data['elex_ppct_discount_amount'] );
 
