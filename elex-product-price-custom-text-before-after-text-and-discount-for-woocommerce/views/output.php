@@ -133,7 +133,7 @@ NETWORK ACTIVE PLUGINS:
 			continue;
 		}
 
-		$plugin_name = get_plugin_data( $plugin_path );
+		$plugin_name = get_plugin_data( $plugin_path, false, false );
 
 echo esc_html_e( $plugin_name['Name'] ) . ' :' . esc_html_e( $plugin_name['Version'] ) . "\n";
 	}

@@ -431,10 +431,16 @@ class SettingsController {
 		}
 		
 		$product_info = wc_get_product( $product_id );
+		$custom_check_enable = 'no';
+		$custom_discount_checkbox = 'no';
 
-		$custom_check_enable      = $product_info->get_meta( 'elex_ppct_custom_fields_checkbox' ) ? $product_info->get_meta( 'elex_ppct_custom_fields_checkbox' ) : 'no';
+		if ( is_object( $product_info ) && method_exists( $product_info, 'get_meta' ) ) {
+			$custom_check_enable = $product_info->get_meta( 'elex_ppct_custom_fields_checkbox' ) ? $product_info->get_meta( 'elex_ppct_custom_fields_checkbox' ) : 'no';
+			$custom_discount_checkbox = $product_info->get_meta( 'elex_ppct_custom_fields_discount_type_checkbox' ) ? $product_info->get_meta( 'elex_ppct_custom_fields_discount_type_checkbox' ) : 'no';
+		}
+		
+
 		$check_enable             = get_option( 'elex_ppct_check_field' );
-		$custom_discount_checkbox = $product_info->get_meta( 'elex_ppct_custom_fields_discount_type_checkbox' ) ? $product_info->get_meta( 'elex_ppct_custom_fields_discount_type_checkbox' ) : 'no';
 
 		if ( ! empty( $variation_id ) ) {
 			$var_product = wc_get_product( $variation_id );
