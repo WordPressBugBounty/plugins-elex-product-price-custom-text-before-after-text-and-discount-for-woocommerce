@@ -3,7 +3,7 @@ Contributors: elextensions
 Tags: before & after text, woocommerce discounts, woocommerce dynamic pricing
 Requires at least: 3.0.1
 Tested up to: 6.8
-Stable tag: 4.1.7
+Stable tag: 4.1.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -58,8 +58,11 @@ If you are facing any issues, please create a topic at the plugin support sectio
 
 == Changelog ==
 
+= 4.1.8 =
+* Made compatible with WooCommerce 10.0.0
+
 = 4.1.7 =
-* Made compatible with WooCommerce 9.8
+* Made compatible with WooCommerce 9.9
 * Made compatible with WordPress 6.8
 * Fixed a notice wherein Function _load_textdomain_just_in_time was called incorrectly
 
@@ -224,8 +227,11 @@ If you are facing any issues, please create a topic at the plugin support sectio
 
 == Upgrade Notice ==
 
+= 4.1.8 =
+* Made compatible with WooCommerce 10.0.0
+
 = 4.1.7 =
-* Made compatible with WooCommerce 9.8
+* Made compatible with WooCommerce 9.9
 * Made compatible with WordPress 6.8
 * Fixed a notice wherein Function _load_textdomain_just_in_time was called incorrectly
 
