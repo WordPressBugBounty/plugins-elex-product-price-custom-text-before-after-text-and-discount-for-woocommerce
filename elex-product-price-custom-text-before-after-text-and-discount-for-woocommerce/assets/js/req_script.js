@@ -22,20 +22,26 @@ jQuery(document).ready(function() {
 
     jQuery(function(){
 
-        if (jQuery('#elex_ppct_discount_type').val() === 'no-discount') {
-            jQuery('#elex_ppct_discount_amount').closest('tr').addClass('d-none');
-        }
-
         // On change event of the discount type dropdown
         jQuery('#elex_ppct_discount_type').change(function() {
-            if (jQuery(this).val() === 'no-discount') {
+            const selectedVal = jQuery(this).val();
+            const $amountField = jQuery('#elex_ppct_discount_amount');
+            if (selectedVal === 'no-discount') {
                 // If "No Discount" is selected, hide the discount value field
-                jQuery('#elex_ppct_discount_amount').closest('tr').addClass('d-none');
+                $amountField.closest('tr').addClass('d-none');
             } else {
                 // If any other option is selected, show the discount value field
-                jQuery('#elex_ppct_discount_amount').closest('tr').removeClass('d-none');
+                $amountField.closest('tr').removeClass('d-none');
+                if (selectedVal === 'percent') {
+                    $amountField.attr('max', 100);
+                    if ($amountField.val() > 100) {
+                        $amountField.val(100);
+                    }
+                } else {
+                    $amountField.removeAttr('max');
+                }
             }
-        });
+        }).trigger('change');
 
         //include products filter
         const elex_ppct_select_all_categories_id_include_products = jQuery('#elex_ppct_select_all_categories_id_include_products');

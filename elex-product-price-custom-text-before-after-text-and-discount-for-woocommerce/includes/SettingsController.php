@@ -153,22 +153,16 @@ class SettingsController {
 
 	// to get the base price of the product.
 	public static function elex_ppct_base_price( $product ) {
-	remove_filter( 'woocommerce_product_get_regular_price', array( self::class, 'elex_ppct_discount_product' ), 8, 2 );
-   remove_filter( 'woocommerce_product_get_price', array( self::class, 'elex_ppct_discount_product' ), 8, 2 );
+		// remove the price filters to get the base price
+		self::remove_price_filters();
 
-   remove_filter( 'woocommerce_product_variation_get_regular_price', array( self::class, 'elex_ppct_discount_product' ), 8, 2 );
-   remove_filter( 'woocommerce_product_variation_get_price', array( self::class, 'elex_ppct_discount_product' ), 8, 2 );
+		// get the base price
+		$base_price = $product->get_regular_price();
 
-   $base_price = $product->get_regular_price();
-   // for simple product price.
-   add_filter( 'woocommerce_product_get_regular_price', array( self::class, 'elex_ppct_discount_product' ), 8, 2 );
-   add_filter( 'woocommerce_product_get_price', array( self::class, 'elex_ppct_discount_product' ), 8, 2 );
+		// add the price filters
+		self::add_price_filters();
 
-   // for variable product each variation price.
-   add_filter( 'woocommerce_product_variation_get_regular_price', array( self::class, 'elex_ppct_discount_product' ), 8, 2 );
-   add_filter( 'woocommerce_product_variation_get_price', array( self::class, 'elex_ppct_discount_product' ), 8, 2 );
-
-   return $base_price;
+		return $base_price;
 	}
 
 	public static function elex_ppct_get_price_to_display( $price, $product, $flag = false ) {
@@ -414,9 +408,15 @@ class SettingsController {
 	public static function elex_ppct_discount( $price, $discount, $type ) {   
 		if ( 'amount' === $type && is_numeric( $price ) ) {
 			$price = ( $price - ( ( float ) $discount ) );
+			if ( $price < 0 ) {
+				$price = 0;
+			}
 		}
 		if ( 'percent' === $type && is_numeric( $price ) ) {
 			$price = ( $price - ( $price * ( ( float ) $discount / 100 ) ) );
+			if ( $price < 0 ) {
+				$price = 0;
+			}
 		}
 	return $price;
 	}
@@ -429,18 +429,30 @@ class SettingsController {
 		} else {
 			$product_id = $product->get_id();
 		}
-		
 		$product_info = wc_get_product( $product_id );
+		
+		// Prevent Recursion: Remove filters before querying product data
+		self::remove_price_filters();
+
+		//fetch product data
+		$is_on_sale = $product->is_on_sale();
+		
+		// Restore filters immediately
+		self::add_price_filters();
+		$current_hook = current_filter();
+		
+		// while applying this plugin's discount, no need to change/apply discount on regular price if product is on sale,
+		if ( strpos( $current_hook, 'regular_price' ) !== false && $is_on_sale ) {
+			return $price;
+		}
+
 		$custom_check_enable = 'no';
 		$custom_discount_checkbox = 'no';
-
 		if ( is_object( $product_info ) && method_exists( $product_info, 'get_meta' ) ) {
 			$custom_check_enable = $product_info->get_meta( 'elex_ppct_custom_fields_checkbox' ) ? $product_info->get_meta( 'elex_ppct_custom_fields_checkbox' ) : 'no';
 			$custom_discount_checkbox = $product_info->get_meta( 'elex_ppct_custom_fields_discount_type_checkbox' ) ? $product_info->get_meta( 'elex_ppct_custom_fields_discount_type_checkbox' ) : 'no';
 		}
-		
-
-		$check_enable             = get_option( 'elex_ppct_check_field' );
+		$check_enable = get_option( 'elex_ppct_check_field' );
 
 		if ( ! empty( $variation_id ) ) {
 			$var_product = wc_get_product( $variation_id );
@@ -850,21 +862,30 @@ class SettingsController {
 		$new_settings = $_POST;
 		$new_settings['elex_ppct_check_field']                                                       = isset( $_POST['elex_ppct_check_field'] ) ? true : false;
 
-		$new_settings['general']['limit_button_on_certain_products']['enabled']                      = isset( $_POST['general']['limit_button_on_certain_products']['enabled'] ) ? true : false;
-		$new_settings['general']['limit_button_on_certain_products']['select_all']                   = isset( $_POST['general']['limit_button_on_certain_products']['select_all'] ) ? true : false;
-		$new_settings['general']['limit_button_on_certain_products']['include_products_by_category'] = isset( $_POST['general']['limit_button_on_certain_products']['include_products_by_category'] ) ? map_deep( $_POST['general']['limit_button_on_certain_products']['include_products_by_category'], 'sanitize_text_field' ) : array();
-		$new_settings['general']['limit_button_on_certain_products']['include_products_by_name']     = isset( $_POST['general']['limit_button_on_certain_products']['include_products_by_name'] ) ? map_deep( $_POST['general']['limit_button_on_certain_products']['include_products_by_name'], 'sanitize_text_field' ) : array();
-		$new_settings['general']['limit_button_on_certain_products']['include_products_by_tag']      = isset( $_POST['general']['limit_button_on_certain_products']['include_products_by_tag'] ) ? map_deep( $_POST['general']['limit_button_on_certain_products']['include_products_by_tag'], 'sanitize_text_field' ) : array();
-	   
-		$new_settings['general']['exclude_products']['enabled']                                      = isset( $_POST['general']['exclude_products']['enabled'] ) ? true : false;
-		$new_settings['general']['exclude_products']['select_all']                                   = isset( $_POST['general']['exclude_products']['select_all'] ) ? true : false;
-		$new_settings['general']['exclude_products']['by_category']                                  = isset( $_POST['general']['exclude_products']['by_category'] ) ? map_deep( $_POST['general']['exclude_products']['by_category'], 'sanitize_text_field' ) : array();
-		$new_settings['general']['exclude_products']['by_name']                                      = isset( $_POST['general']['exclude_products']['by_name'] ) ? map_deep( $_POST['general']['exclude_products']['by_name'], 'sanitize_text_field' ) : array();
-		$new_settings['general']['exclude_products']['by_tag']                                       = isset( $_POST['general']['exclude_products']['by_tag'] ) ? map_deep( $_POST['general']['exclude_products']['by_tag'], 'sanitize_text_field' ) : array();
-	   
-		$new_settings['general']['role_based_filter']['enabled']                                     = isset( $_POST['general']['role_based_filter']['enabled'] ) ? true : false;
-		$new_settings['general']['role_based_filter']['include_roles']                               = isset( $_POST['general']['role_based_filter']['include_roles'] ) ? map_deep( $_POST['general']['role_based_filter']['include_roles'], 'sanitize_text_field' ) : array();
-		$new_settings['general']['role_based_filter']['exclude_roles']                               = isset( $_POST['general']['role_based_filter']['exclude_roles'] ) ? map_deep( $_POST['general']['role_based_filter']['exclude_roles'], 'sanitize_text_field' ) : array();
+		// set empty values for premium settings on basic build
+		$defaults = [
+			'limit_button_on_certain_products' => [
+				'enabled'                     => false,
+				'select_all'                  => false,
+				'include_products_by_category' => [],
+				'include_products_by_name'     => [],
+				'include_products_by_tag'      => [],
+			],
+			'exclude_products' => [
+				'enabled'     => false,
+				'select_all'  => false,
+				'by_category' => [],
+				'by_name'     => [],
+				'by_tag'      => [],
+			],
+			'role_based_filter' => [
+				'enabled'       => false,
+				'include_roles' => [],
+				'exclude_roles' => [],
+			],
+		];
+
+		$new_settings['general'] = $defaults;
 		
 		return $general_setting_options->merge( $new_settings );
 	}
@@ -877,5 +898,28 @@ class SettingsController {
 
 		return $general_setting_options->customData( $custData );
 
+	}
+	/**
+	* Disables the custom discount logic.
+	* It ensures that the product returns its original database price (regular or sale) 
+	* without the plugin's additional calculations being applied.
+	*/
+	public static function remove_price_filters() {
+		remove_filter( 'woocommerce_product_get_regular_price', array( self::class, 'elex_ppct_discount_product' ), 8, 2 );
+		remove_filter( 'woocommerce_product_get_price', array( self::class, 'elex_ppct_discount_product' ), 8, 2 );
+		remove_filter( 'woocommerce_product_variation_get_regular_price', array( self::class, 'elex_ppct_discount_product' ), 8, 2 );
+		remove_filter( 'woocommerce_product_variation_get_price', array( self::class, 'elex_ppct_discount_product' ), 8, 2 );
+	}
+
+	/**
+	* Enables the custom discount logic.
+	* Whenever WooCommerce asks for a product price, the 'elex_ppct_discount_product' 
+	* method will intercept it and apply the configured discount.
+	*/
+	public static function add_price_filters() {
+		add_filter( 'woocommerce_product_get_regular_price', array( self::class, 'elex_ppct_discount_product' ), 8, 2 );
+		add_filter( 'woocommerce_product_get_price', array( self::class, 'elex_ppct_discount_product' ), 8, 2 );
+		add_filter( 'woocommerce_product_variation_get_regular_price', array( self::class, 'elex_ppct_discount_product' ), 8, 2 );
+		add_filter( 'woocommerce_product_variation_get_price', array( self::class, 'elex_ppct_discount_product' ), 8, 2 );
 	}
 }

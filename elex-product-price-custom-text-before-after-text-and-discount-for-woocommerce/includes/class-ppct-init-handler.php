@@ -38,26 +38,11 @@ class ELEX_PPCT_Init_Handler {
 		
 	}
 
-	public function form_settings_localize_script() {
-		
-		wp_localize_script(
-			'elex_ppct_formsetting',
-			'raq_formsetting_ajax_object',
-			array(
-				'ajax_url' => admin_url( 'admin-ajax.php' ),
-				'nonce'    => wp_create_nonce( 'raq-formsetting-ajax-nonce' ),
-			)
-		);
-	}
-
 	public function enqueue_scripts() {
 		global $plugin_page;
 		$page         = ( ! empty( filter_input( INPUT_GET, 'page' ) ) ? sanitize_text_field( filter_input( INPUT_GET, 'page' ) ) : '' );
 		$include_page = array( 'elex_product_price_custom_text_and_discount', 'ppct-help_support', 'ppct-go-premium' );
 		if ( in_array( $page, $include_page ) ) {
-
-			wp_enqueue_script( 'elex_ppct_formsetting', plugins_url( dirname( $this->plugin_basename ) . '/assets/js/components/form_settings.min.js' ), array( 'jquery', 'wp-element', 'wp-i18n' ), self::VERSION );
-			self::form_settings_localize_script();
 
 			wp_enqueue_script( 'elex_ppct_select_2_js', plugins_url( dirname( $this->plugin_basename ) . '/assets/js/select2-min.js' ), array( 'jquery', 'underscore' ), self::VERSION, true );
 			wp_enqueue_style( 'elex_ppct_select_2_css', plugins_url( dirname( $this->plugin_basename ) . '/assets/css/select-2-min.css' ), array(), self::VERSION );

@@ -3,7 +3,7 @@
         'name' => 'elula/elex-product-price-custom-text-before-after-text-and-discount-for-woocommerce',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => 'cbcc4feb128503adb599b9db9b878f1662b629cd',
+        'reference' => 'caf2aa1024cb5a885ff23a3a42cc8e520e3e9f5e',
         'type' => 'wordpress-plugin',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -13,7 +13,7 @@
         'elula/elex-product-price-custom-text-before-after-text-and-discount-for-woocommerce' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => 'cbcc4feb128503adb599b9db9b878f1662b629cd',
+            'reference' => 'caf2aa1024cb5a885ff23a3a42cc8e520e3e9f5e',
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

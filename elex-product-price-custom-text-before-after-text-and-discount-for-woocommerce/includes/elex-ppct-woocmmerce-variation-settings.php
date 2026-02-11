@@ -164,70 +164,42 @@ function elex_ppct_custom_tab_data_basic() {
 	<script type="text/javascript" >
 	jQuery(function($){
 
-		// All fields checkbox
-		const elex_ppct_custom_fields_checkbox = jQuery('#elex_ppct_custom_fields_checkbox');
-		elex_ppct_custom_fields_checkbox.click(function(){
-			var value=jQuery(this).is(':checked');
-			if(value === true ){
-				jQuery('#elex_ppct_display_fields').show();
-			} else {
-				jQuery('#elex_ppct_display_fields').hide();
-			}
-		});
-		if (elex_ppct_custom_fields_checkbox.is(":checked")) {
-			jQuery('#elex_ppct_display_fields').show();
-		} else {
-			jQuery('#elex_ppct_display_fields').hide();
-		}
+		// The main "custom text and discount" enable/disable checkbox for product 
+		jQuery('#elex_ppct_custom_fields_checkbox').on('change', function() {
+			jQuery('#elex_ppct_display_fields').toggle(this.checked);
+		}).change();
 
 		// Prefix checkbox
-		const elex_ppct_custom_fields_prefix_checkbox = jQuery('#elex_ppct_custom_fields_prefix_checkbox');
-		elex_ppct_custom_fields_prefix_checkbox.on('change', function() {
-			if(this.checked) {
-				jQuery('#elex_ppct_custom_fields_prefix').closest('p').show();
-			} else {
-				jQuery('#elex_ppct_custom_fields_prefix').closest('p').hide();
-			}
-		});
-		if( elex_ppct_custom_fields_prefix_checkbox.is(':checked') ) {
-			jQuery('#elex_ppct_custom_fields_prefix').closest('p').show();
-		} else {
-			jQuery('#elex_ppct_custom_fields_prefix').closest('p').hide();
-		}
-
+		jQuery('#elex_ppct_custom_fields_prefix_checkbox').on('change', function() {
+			jQuery('#elex_ppct_custom_fields_prefix').closest('p').toggle(this.checked);
+		}).change();
+		
 		// Suffix checkbox
-		const elex_ppct_custom_fields_suffix_checkbox = jQuery('#elex_ppct_custom_fields_suffix_checkbox');
-		elex_ppct_custom_fields_suffix_checkbox.on('change', function() {
-			if(this.checked) {
-				jQuery('.elex_ppct_custom_fields_suffix_field ').show();
-			} else {
-				jQuery('.elex_ppct_custom_fields_suffix_field ').hide();
-			}
-		});
-		if ( elex_ppct_custom_fields_suffix_checkbox.is(':checked') ) {
-			jQuery('.elex_ppct_custom_fields_suffix_field ').show();
-		} else {
-			jQuery('.elex_ppct_custom_fields_suffix_field ').hide();
-		}
+		jQuery('#elex_ppct_custom_fields_suffix_checkbox').on('change', function() {
+			jQuery('.elex_ppct_custom_fields_suffix_field').closest('p').toggle(this.checked);
+		}).change();
+		
 
 		// Discount type checkbox
-		const elex_ppct_custom_fields_discount_type_checkbox = jQuery('#elex_ppct_custom_fields_discount_type_checkbox');
-		elex_ppct_custom_fields_discount_type_checkbox.on('change', function() {
-			if(this.checked) {
-				jQuery('#elex_ppct_discount_type').closest('p').show();
-				jQuery('#elex_ppct_discount_amount').closest('p').show();
+		jQuery('#elex_ppct_custom_fields_discount_type_checkbox').on('change', function() {
+			jQuery('#elex_ppct_discount_type').closest('p').toggle(this.checked);
+			jQuery('#elex_ppct_discount_amount').closest('p').toggle(this.checked);
+		}).change();
+
+		// Discount type change
+		jQuery("#elex_ppct_discount_type").on('change', function() {
+			const selectedVal = jQuery(this).val();
+			const $amountField = jQuery('#elex_ppct_discount_amount');
+			if (selectedVal === 'percent') {
+				$amountField.attr('max', 100);
+				if ($amountField.val() > 100) {
+					$amountField.val(100);
+				}
 			} else {
-				jQuery('#elex_ppct_discount_type').closest('p').hide();
-				jQuery('#elex_ppct_discount_amount').closest('p').hide();
+				$amountField.removeAttr('max');
 			}
-		});
-		if ( elex_ppct_custom_fields_discount_type_checkbox.is(':checked') ) {
-			jQuery('#elex_ppct_discount_type').closest('p').show();
-			jQuery('#elex_ppct_discount_amount').closest('p').show();
-		} else {
-			jQuery('#elex_ppct_discount_type').closest('p').hide();
-			jQuery('#elex_ppct_discount_amount').closest('p').hide();
-		}
+		}).change();
+
 	});
 
 	</script>
@@ -372,17 +344,17 @@ function elex_ppct_basic_add_custom_field_to_variations( $loop, $variation_data,
 				jQuery('.elex_ppct_variation_add_suffix_<?php esc_attr_e( $variation->ID ); ?>_field').show(); 
 				jQuery('.elex_ppct_discount_type_<?php esc_attr_e( $variation->ID ); ?>_field').show(); 
 				jQuery('.elex_ppct_discount_amount_<?php esc_attr_e( $variation->ID ); ?>_field').show(); 
-				jQuery('#elex_ppct_variation_use_prefix_id_<?php esc_attr_e( $variation->ID ); ?>').prop('checked', true);
-				jQuery('#elex_ppct_variation_use_suffix_id_<?php esc_attr_e( $variation->ID ); ?>').prop('checked', true);
-				jQuery('#elex_ppct_variation_use_discount_id_<?php esc_attr_e( $variation->ID ); ?>').prop('checked', true);
+				jQuery('#elex_ppct_variation_use_prefix_id_<?php esc_attr_e( $variation->ID ); ?>').prop('checked', true).prop('disabled', false);
+				jQuery('#elex_ppct_variation_use_suffix_id_<?php esc_attr_e( $variation->ID ); ?>').prop('checked', true).prop('disabled', false);
+				jQuery('#elex_ppct_variation_use_discount_id_<?php esc_attr_e( $variation->ID ); ?>').prop('checked', true).prop('disabled', false);
 			} else {
 				jQuery('.elex_ppct_variation_add_prefix_<?php esc_attr_e( $variation->ID ); ?>_field').hide(); 
 				jQuery('.elex_ppct_variation_add_suffix_<?php esc_attr_e( $variation->ID ); ?>_field').hide(); 
 				jQuery('.elex_ppct_discount_type_<?php esc_attr_e( $variation->ID ); ?>_field').hide(); 
 				jQuery('.elex_ppct_discount_amount_<?php esc_attr_e( $variation->ID ); ?>_field').hide(); 
-				jQuery('#elex_ppct_variation_use_prefix_id_<?php esc_attr_e( $variation->ID ); ?>').prop('checked', false);
-				jQuery('#elex_ppct_variation_use_suffix_id_<?php esc_attr_e( $variation->ID ); ?>').prop('checked', false);
-				jQuery('#elex_ppct_variation_use_discount_id_<?php esc_attr_e( $variation->ID ); ?>').prop('checked', false);
+				jQuery('#elex_ppct_variation_use_prefix_id_<?php esc_attr_e( $variation->ID ); ?>').prop('checked', false).prop('disabled', true);
+				jQuery('#elex_ppct_variation_use_suffix_id_<?php esc_attr_e( $variation->ID ); ?>').prop('checked', false).prop('disabled', true);
+				jQuery('#elex_ppct_variation_use_discount_id_<?php esc_attr_e( $variation->ID ); ?>').prop('checked', false).prop('disabled', true);
 			}
 		});
 		if ( jQuery('#elex_ppct_variation_use_custom_text_plugin_<?php esc_attr_e( $variation->ID ); ?>').is(':checked') ) {
@@ -395,53 +367,44 @@ function elex_ppct_basic_add_custom_field_to_variations( $loop, $variation_data,
 			jQuery('.elex_ppct_variation_add_suffix_<?php esc_attr_e( $variation->ID ); ?>_field').hide(); 
 			jQuery('.elex_ppct_discount_type_<?php esc_attr_e( $variation->ID ); ?>_field').hide(); 
 			jQuery('.elex_ppct_discount_amount_<?php esc_attr_e( $variation->ID ); ?>_field').hide();
+
+			// in intial load if the main checkbox is not checked then disable the prefix, suffix and discount checkboxs.
+			jQuery('#elex_ppct_variation_use_prefix_id_<?php esc_attr_e( $variation->ID ); ?>').prop('checked', false).prop('disabled', true);
+			jQuery('#elex_ppct_variation_use_suffix_id_<?php esc_attr_e( $variation->ID ); ?>').prop('checked', false).prop('disabled', true);
+			jQuery('#elex_ppct_variation_use_discount_id_<?php esc_attr_e( $variation->ID ); ?>').prop('checked', false).prop('disabled', true);
 		}
+
 
 		// Hide and Show prefix field
 		jQuery('#elex_ppct_variation_use_prefix_id_<?php esc_attr_e( $variation->ID ); ?>').on('change',function() {
-			if(this.checked){
-				jQuery('.elex_ppct_variation_add_prefix_<?php esc_attr_e( $variation->ID ); ?>_field').show(); 
-			} else {
-				jQuery('.elex_ppct_variation_add_prefix_<?php esc_attr_e( $variation->ID ); ?>_field').hide(); 
-			}
-		});
-		if( jQuery('#elex_ppct_variation_use_prefix_id_<?php esc_attr_e( $variation->ID ); ?>').is(':checked') ) {
-			jQuery('.elex_ppct_variation_add_prefix_<?php esc_attr_e( $variation->ID ); ?>_field').show(); 
-		} else {
-			jQuery('.elex_ppct_variation_add_prefix_<?php esc_attr_e( $variation->ID ); ?>_field').hide(); 
-		}
+			jQuery('.elex_ppct_variation_add_prefix_<?php esc_attr_e( $variation->ID ); ?>_field').toggle(this.checked);
+		}).change();
 
 		// Hide and Show suffix field.
 		jQuery('#elex_ppct_variation_use_suffix_id_<?php esc_attr_e( $variation->ID ); ?>').on('change',function() {
-			if(this.checked){
-				jQuery('.elex_ppct_variation_add_suffix_<?php esc_attr_e( $variation->ID ); ?>_field').show(); 
-			} else {
-				jQuery('.elex_ppct_variation_add_suffix_<?php esc_attr_e( $variation->ID ); ?>_field').hide(); 
-			}
-		});
-		if( jQuery('#elex_ppct_variation_use_suffix_id_<?php esc_attr_e( $variation->ID ); ?>').is(':checked') ) {
-			jQuery('.elex_ppct_variation_add_suffix_<?php esc_attr_e( $variation->ID ); ?>_field').show(); 
-		} else {
-			jQuery('.elex_ppct_variation_add_suffix_<?php esc_attr_e( $variation->ID ); ?>_field').hide(); 
-		}
+			jQuery('.elex_ppct_variation_add_suffix_<?php esc_attr_e( $variation->ID ); ?>_field').toggle(this.checked);
+		}).change();
 
 		// Hide and Show discount field.
 		jQuery('#elex_ppct_variation_use_discount_id_<?php esc_attr_e( $variation->ID ); ?>').on('change',function() {
-			if(this.checked){
-				jQuery('.elex_ppct_discount_type_<?php esc_attr_e( $variation->ID ); ?>_field').show(); 
-				jQuery('.elex_ppct_discount_amount_<?php esc_attr_e( $variation->ID ); ?>_field').show();
+			jQuery('.elex_ppct_discount_type_<?php esc_attr_e( $variation->ID ); ?>_field').toggle(this.checked);
+			jQuery('.elex_ppct_discount_amount_<?php esc_attr_e( $variation->ID ); ?>_field').toggle(this.checked);
+		}).change();
+
+
+		jQuery('#elex_ppct_discount_type_<?php esc_attr_e( $variation->ID ); ?>').on('change',function() {
+			const selectedVal = jQuery(this).val();
+			const $amountField = jQuery('#elex_ppct_discount_amount_<?php esc_attr_e( $variation->ID ); ?>');
+			if (selectedVal === 'percent') {
+				$amountField.attr('max', 100);
+				if ($amountField.val() > 100) {
+					$amountField.val(100);
+				}
 			} else {
-				jQuery('.elex_ppct_discount_type_<?php esc_attr_e( $variation->ID ); ?>_field').hide(); 
-				jQuery('.elex_ppct_discount_amount_<?php esc_attr_e( $variation->ID ); ?>_field').hide(); 
+				$amountField.removeAttr('max');
 			}
-		});
-		if ( jQuery('#elex_ppct_variation_use_discount_id_<?php esc_attr_e( $variation->ID ); ?>').is(':checked') ) {
-			jQuery('.elex_ppct_discount_type_<?php esc_attr_e( $variation->ID ); ?>_field').show(); 
-			jQuery('.elex_ppct_discount_amount_<?php esc_attr_e( $variation->ID ); ?>_field').show();
-		} else {
-			jQuery('.elex_ppct_discount_type_<?php esc_attr_e( $variation->ID ); ?>_field').hide(); 
-			jQuery('.elex_ppct_discount_amount_<?php esc_attr_e( $variation->ID ); ?>_field').hide();
-		}
+		}).change();
+
 	</script>
 	<?php
 }

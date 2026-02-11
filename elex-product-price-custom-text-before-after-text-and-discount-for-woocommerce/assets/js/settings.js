@@ -480,46 +480,14 @@ if( jQuery(".elex-ppct-check-sec-input-add-more-items").prop('checked') ){
     });
 
 jQuery('.general_setting_save_chages').click(function(){
-    if( jQuery('#exclude_product_enabled').prop('checked') ) {
-         if(jQuery('.exclude_prod_by_cat').select2('data').length === 0 &&
-        jQuery('.exclude_prod_by_name').select2('data').length === 0 &&
-        jQuery('.exclude_prod_by_tag').select2('data').length === 0 ){
-            alert("Choose any options for exclude category or tag or name");
+    // while percentage discount is enabled discount percentage should be between 0 to 100
+    if (jQuery('#elex_ppct_discount_type').val() === 'percent') {
+        const discount_value = jQuery('#elex_ppct_discount_amount').val();
+        if (discount_value < 0 || discount_value > 100) {
+            alert("Enter valid discount percentage");
             return false;
         }
-        
     }
-    if( jQuery('#limit_product_is_enabled').prop('checked') ) {
-        if(jQuery('.include_prod_by_cat').select2('data').length === 0 &&
-       jQuery('.include_prod_by_name').select2('data').length === 0 &&
-       jQuery('.include_prod_by_tag').select2('data').length === 0 ){
-           alert("Choose any options for include category or tag or name");
-           return false;
-       }
-       
-   }
-   
-
-   if( jQuery('#role_based_enabled').prop('checked') ) {
-    if(jQuery('.include_roles').select2('data').length === 0 &&
-   jQuery('.exclude_roles').select2('data').length === 0 ){
-       alert("Choose any options for user role.");
-       return false;
-   }
-   
-}
-
-if( jQuery('#hide_add_cart_exclude').prop('checked') ) {
-    if(jQuery('.hidecart_exclude_prod_by_cat').select2('data').length === 0 &&
-   jQuery('.hidecart_exclude_prod_by_name').select2('data').length === 0 &&
-   jQuery('.hidecart_exclude_prod_by_tag').select2('data').length === 0 ){
-       alert("Choose any options for exclude category or tag or name");
-       return false;
-   }
-  
-}
-
-
 });
 jQuery('.hidecart_setting_save_chages').click(function(){
 
